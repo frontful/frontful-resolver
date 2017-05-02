@@ -1,0 +1,25 @@
+{
+  "name": "frontful-resolver",
+  "version": "0.0.1",
+  "private": true,
+  "description": "State management approach for component based applications with focus on universality and isomorphism, models and data (pre)fetching and routing",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/frontful/frontful-resolver.git"
+  },
+  "scripts": {
+    "build": "babel-preset-frontful build",
+    "deploy": "babel-preset-frontful deploy"
+  },
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "react": "15.x"
+  },
+  "devDependencies": {
+    "babel-preset-frontful": "0.x || 1.x",
+    "eslint-config-frontful": "0.x || 1.x",
+    "react": "15.x"
+  }
+}
