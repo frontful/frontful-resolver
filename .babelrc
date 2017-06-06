@@ -1,5 +1,5 @@
 {
   "presets": [
-    "frontful"
+    "frontful/config/package"
   ]
 }
