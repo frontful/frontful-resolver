@@ -1,9 +1,6 @@
 import ExtendableError from 'es6-error'
 import React from 'react'
-import {Promisable as PromisableClass} from './utils/Promisable'
-import {deferred} from './utils/deferred'
-import {getDisplayName} from './utils/getDisplayName'
-import {isBrowser} from './utils/isBrowser'
+import {Promisable as PromisableClass, deferred, getDisplayName, isBrowser} from 'frontful-utils'
 import {observer as mobxObserver} from 'mobx-react'
 import {untracked, observable, reaction} from 'mobx'
 
