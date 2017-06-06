@@ -22,12 +22,11 @@ else {
 }
 
 export class Resolver {
-  constructor({element, dependencies, config}) {
+  constructor(element, context) {
     this.getRequisites = this.getRequisites.bind(this)
-    this.config = config
+    this.context = context
     this.isResolver = true
     this.Component = element.type
-    this.dependencies = dependencies
     this.props = element.props
     this.resolvers = this.extractResolvers(this.Component)
     this.resolversTree = this.extractResolversTree(this.resolvers, this.props)
@@ -51,7 +50,7 @@ export class Resolver {
 
   extractResolvers(Component) {
     const resolvers = []
-    Component.requisites(this.getResolveFunction(resolvers))
+    Component.resolvable(this.getResolveFunction(resolvers))
     return resolvers
   }
 
@@ -99,12 +98,8 @@ export class Resolver {
             if (value.type.resolved) {
               processedValue = value
             }
-            else if (value.type.requisites) {
-              const resolver = new Resolver({
-                element: value,
-                dependencies: this.dependencies,
-                config: this.config,
-              })
+            else if (value.type.resolvable) {
+              const resolver = new Resolver(value, this.context)
               item.resolvers.push(resolver)
               processedValue = resolver.execute()
             }
@@ -161,11 +156,12 @@ export class Resolver {
     return Promise.all(
       resolversTree.map((item) => {
         const execution = deferred()
+        execution.promise.isProcessing = true
 
         const resolveProps = () => {
           try {
             return item.resolver({
-              ...this.dependencies,
+              ...this.Component.configurator ? this.Component.configurator(this.context) : null,
               ...item.props,
               getRequisites: this.getRequisites,
             }) || {}
@@ -176,7 +172,7 @@ export class Resolver {
         }
 
         const reactToProps = (resolverResult) => {
-          const processing = item.process && item.process.promise && item.process.promise.isPending && item.process.promise.isPending()
+          const processing = item.process && item.process.promise && item.process.promise.isProcessing
           if (processing) {
             item.process.canceled = true
           }
@@ -199,17 +195,28 @@ export class Resolver {
             item.resolvers = []
             return this.resolveReturnValues(resolverResult, item, boundProcess)
           }).then(() => {
-            if (execution.promise.isPending()) {
+            if (execution.promise.isProcessing) {
               execution.resolve()
+              execution.promise.isProcessing = false
+            }
+            if (boundProcess.promise) {
+              boundProcess.promise.isProcessing = false
             }
             return null
           }).catch(CanceledException, () => {
+            if (boundProcess.promise) {
+              boundProcess.promise.isProcessing = false
+            }
           }).catch((error) => {
+            if (boundProcess.promise) {
+              boundProcess.promise.isProcessing = false
+            }
             this.data = observable({
               requisites: observable.ref({})
             })
-            if (execution.promise.isPending()) {
+            if (execution.promise.isProcessing) {
               execution.reject(error)
+              execution.promise.isProcessing = false
             }
             else {
               if (!error.response) {
@@ -217,6 +224,8 @@ export class Resolver {
               }
             }
           })
+
+          boundProcess.promise.isProcessing = true
         }
 
         item.disposeReaction = reaction(resolveProps, reactToProps, true)
@@ -292,7 +301,7 @@ export class Resolver {
   }
 
   execute() {
-    const inlineErrors = this.config.inlineErrors
+    const inlineErrors = true
 
     return this.invokeReactivity(this.resolversTree).then(() => {
       const Component = this.Component
@@ -306,7 +315,7 @@ export class Resolver {
             render() {
               const requisites = getRequisites()
               return (
-                requisites && Component && <Component requisites={requisites} {...this.props} />
+                requisites && Component && <Component requisites={requisites} {...this.props} {...requisites}/>
               )
             }
           }
