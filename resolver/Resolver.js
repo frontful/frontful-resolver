@@ -321,6 +321,7 @@ export class Resolver {
       result.resolved = true
       return result
     }).catch((error) => {
+      console.log(error)
       class Error extends React.PureComponent {
         static displayName = `Error(${getDisplayName(this.Component)})`
 
@@ -333,7 +334,7 @@ export class Resolver {
               backgroundColor: 'red',
               color: 'white',
             }}>
-              {JSON.stringify(error, null, 2)}
+              {error.toString()}
             </pre>
           ) : null
         }
