@@ -1,10 +1,7 @@
-import ExtendableError from 'es6-error'
 import React from 'react'
 import {Promisable as PromisableClass, deferred, getDisplayName, isBrowser} from 'frontful-utils'
 import {observer as mobxObserver} from 'mobx-react'
 import {untracked, observable, reaction} from 'mobx'
-
-class CanceledException extends ExtendableError {}
 
 let Promisable = Promise
 let observer = (Component) => (Component)
@@ -146,7 +143,7 @@ export class Resolver {
   }
 
   cancel() {
-    throw new CanceledException()
+    throw new Error('frontful_resolver_cancel_execution')
   }
 
   invokeReactivity(resolversTree) {
@@ -200,11 +197,13 @@ export class Resolver {
               boundProcess.promise.isProcessing = false
             }
             return null
-          }).catch(CanceledException, () => {
-            if (boundProcess.promise) {
-              boundProcess.promise.isProcessing = false
-            }
           }).catch((error) => {
+            if(error.message === 'frontful_resolver_cancel_execution') {
+              if (boundProcess.promise) {
+                boundProcess.promise.isProcessing = false
+              }
+              return
+            }
             if (boundProcess.promise) {
               boundProcess.promise.isProcessing = false
             }
@@ -216,9 +215,7 @@ export class Resolver {
               execution.promise.isProcessing = false
             }
             else {
-              if (!error.response) {
-                throw error
-              }
+              throw error
             }
           })
 
@@ -321,7 +318,7 @@ export class Resolver {
       result.resolved = true
       return result
     }).catch((error) => {
-      console.log(error)
+      console.error(error)
       class Error extends React.PureComponent {
         static displayName = `Error(${getDisplayName(this.Component)})`
 
