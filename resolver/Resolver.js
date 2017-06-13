@@ -39,6 +39,12 @@ export class Resolver {
   getResolveFunction(resolvers) {
     const resolve = this.resolve.bind(this, false, resolvers)
     resolve.once = this.resolve.bind(this, true, resolvers)
+    resolve.value = (value) => {
+      return {
+        __pleaseResolve__: true,
+        value: value,
+      }
+    }
     return resolve
   }
 
@@ -67,18 +73,23 @@ export class Resolver {
     })
   }
 
-  resolveReturnValues(resolverResult, item, boundProcess) {
+  resolveReturnValues(resolverResult, item, boundProcess, subResolve) {
     if (Array.isArray(resolverResult)) {
       return resolverResult.reduce((promise, result) => {
         return promise.then((prevRes) => {
-          return this.resolveReturnValues({__syncValue: result}, item, boundProcess).then((newRes) => {
+          return this.resolveReturnValues({__syncValue: result}, item, boundProcess, subResolve).then((newRes) => {
             return prevRes.concat(newRes.__syncValue)
           })
         })
       }, Promise.resolve([])).then((__array) => {
-        item.resolverResult = {__array}
-        this.setRequisites()
-        return this.data.requisites
+        if (subResolve) {
+          return __array
+        }
+        else {
+          item.resolverResult = {__array}
+          this.setRequisites()
+          return this.data.requisites
+        }
       })
     }
 
@@ -100,6 +111,9 @@ export class Resolver {
             else {
               processedValue = value.type
             }
+          }
+          else if (value && value.hasOwnProperty('__pleaseResolve__')) {
+            processedValue = this.resolveReturnValues(value.value, item, boundProcess, true)
           }
           else {
             processedValue = value
@@ -130,14 +144,19 @@ export class Resolver {
         })
       })
     ).then(() => {
-      item.resolverResult = resolverResult
-      if (item.next) {
-        item.next.props = {...item.props, ...item.resolverResult}
-        return this.invokeReactivity([item.next])
+      if (subResolve) {
+        return resolverResult
       }
       else {
-        this.setRequisites()
-        return this.data.requisites
+        item.resolverResult = resolverResult
+        if (item.next) {
+          item.next.props = {...item.props, ...item.resolverResult}
+          return this.invokeReactivity([item.next])
+        }
+        else {
+          this.setRequisites()
+          return this.data.requisites
+        }
       }
     })
   }
