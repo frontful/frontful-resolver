@@ -15,6 +15,14 @@ else {
   observer = (Component) => (Component)
 }
 
+const errorStyle = {
+  backgroundColor: 'red',
+  color: 'white',
+  fontSize: '16px',
+  padding: '5px',
+  margin: '0',
+}
+
 export class Resolver {
   constructor(element, context) {
     this.getRequisites = this.getRequisites.bind(this)
@@ -29,28 +37,23 @@ export class Resolver {
     })
   }
 
-  resolve(once, resolvers, ...resolverQueue) {
+  resolve(untracked, resolvers, ...resolverQueue) {
     if (!this.resolvers) {
-      resolverQueue.once = once
+      resolverQueue.untracked = untracked
       resolvers.push(resolverQueue)
     }
   }
 
   getResolveFunction(resolvers) {
     const resolve = this.resolve.bind(this, false, resolvers)
-    resolve.once = this.resolve.bind(this, true, resolvers)
-    resolve.value = (value) => {
-      return {
-        __pleaseResolve__: true,
-        value: value,
-      }
-    }
+    resolve.untracked = this.resolve.bind(this, true, resolvers)
+    resolve.value = (value) => ({__value__: value})
     return resolve
   }
 
   extractResolvers(Component) {
     const resolvers = []
-    Component.resolvable(this.getResolveFunction(resolvers))
+    Component.__resolver_resolvable__(this.getResolveFunction(resolvers))
     return resolvers
   }
 
@@ -60,9 +63,9 @@ export class Resolver {
         return null
       }
       const [resolver, ...restResolverQueue] = resolverQueue
-      restResolverQueue.once = resolverQueue.once
+      restResolverQueue.untracked = resolverQueue.untracked
       return {
-        resolver: resolverQueue.once ? (...args) => untracked(() => resolver(...args)) : resolver,
+        resolver: resolverQueue.untracked ? (...args) => untracked(() => resolver(...args)) : resolver,
         props: props,
         next: extractResolversTreeItem(restResolverQueue)
       }
@@ -74,36 +77,35 @@ export class Resolver {
   }
 
   resolveReturnValues(resolverResult, item, boundProcess, subResolve) {
-    if (Array.isArray(resolverResult)) {
-      return resolverResult.reduce((promise, result) => {
-        return promise.then((prevRes) => {
-          return this.resolveReturnValues({__syncValue: result}, item, boundProcess, subResolve).then((newRes) => {
-            return prevRes.concat(newRes.__syncValue)
+    if (subResolve) {
+      if (Array.isArray(resolverResult)) {
+        return resolverResult.reduce((promise, result) => {
+          return promise.then((prevRes) => {
+            return this.resolveReturnValues({__array__: result}, item, boundProcess, subResolve).then((newRes) => {
+              return prevRes.concat(newRes.__array__)
+            })
           })
-        })
-      }, Promise.resolve([])).then((__array) => {
-        if (subResolve) {
-          return __array
-        }
-        else {
-          item.resolverResult = {__array}
-          this.setRequisites()
-          return this.data.requisites
-        }
-      })
+        }, Promise.resolve([]))
+      }
+    }
+    else {
+      if (resolverResult && (Array.isArray(resolverResult) || typeof resolverResult !== 'object')) {
+        throw new Error('[frontful-resolver] Top level resolvable should only be object')
+      }
     }
 
     resolverResult = resolverResult || {}
+
     return Promisable.all(
       Object.keys(resolverResult).map((key) => {
         return Promisable.resolve(resolverResult[key]).then((value) => {
           let processedValue = null
 
           if (React.isValidElement(value)) {
-            if (value.type.resolved) {
+            if (value.type.__resolver_resolved__) {
               processedValue = value
             }
-            else if (value.type.resolvable) {
+            else if (value.type.__resolver_resolvable__) {
               const resolver = new Resolver(value, this.context)
               item.resolvers.push(resolver)
               processedValue = resolver.execute()
@@ -112,8 +114,8 @@ export class Resolver {
               processedValue = value.type
             }
           }
-          else if (value && value.hasOwnProperty('__pleaseResolve__')) {
-            processedValue = this.resolveReturnValues(value.value, item, boundProcess, true)
+          else if (value && value.hasOwnProperty('__value__')) {
+            processedValue = this.resolveReturnValues(value.__value__, item, boundProcess, true)
           }
           else {
             processedValue = value
@@ -174,7 +176,7 @@ export class Resolver {
         const resolveProps = () => {
           try {
             return item.resolver({
-              ...this.Component.configurator ? this.Component.configurator(this.context) : null,
+              ...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context) : null,
               ...item.props,
               getRequisites: this.getRequisites,
             }) || {}
@@ -314,45 +316,35 @@ export class Resolver {
   }
 
   execute() {
-    const inlineErrors = true
-
     return this.invokeReactivity(this.resolversTree).then(() => {
       const Component = this.Component
       const getRequisites = this.getRequisites.bind(this)
 
-      const result = (
-        observer(
-          class Resolver extends React.PureComponent {
-            static displayName = `Resolver(${getDisplayName(Component)})`
-
-            render() {
-              const requisites = getRequisites()
-              return (
-                requisites && Component && <Component requisites={requisites} {...this.props} {...requisites}/>
-              )
-            }
+      const result = observer(
+        class Resolver extends React.PureComponent {
+          render() {
+            const requisites = getRequisites()
+            return (
+              requisites && Component && <Component resolved={requisites} {...this.props} {...requisites}/>
+            )
           }
-        )
+        }
       )
-      result.resolved = true
+
+      result.__resolver_resolved__ = true
       return result
     }).catch((error) => {
-      console.error(error)
+      if (isBrowser()) {
+        console.error(error)
+      }
+      else {
+        const parseError = global.frontful && global.frontful.environment && global.frontful.environment.parseError
+        console.log(parseError ? parseError(error).color : error)
+      }
       class Error extends React.PureComponent {
         static displayName = `Error(${getDisplayName(this.Component)})`
-
         render() {
-          return inlineErrors ? (
-            <pre style={{
-              fontSize: '10px',
-              margin: '5px',
-              padding: '5px',
-              backgroundColor: 'red',
-              color: 'white',
-            }}>
-              {error.toString()}
-            </pre>
-          ) : null
+          return <pre style={errorStyle}>{error.toString()}</pre>
         }
       }
       return {

@@ -4,16 +4,16 @@ function resolver(resolvable) {
   return resolver.bind(resolvable)
 }
 
-resolver.config = function(configurator) {
+resolver.define = function(definer) {
   return function(Component) {
-    Component.configurator = configurator
+    Component.__resolver_definer__ = definer
     return Component
   }
 }
 
 resolver.bind = function(resolvable) {
   return function(Component) {
-    Component.resolvable = resolvable
+    Component.__resolver_resolvable__ = resolvable
     return Component
   }
 }

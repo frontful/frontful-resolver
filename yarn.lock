@@ -607,8 +607,8 @@ babel-preset-flow@^6.23.0:
     babel-plugin-transform-flow-strip-types "^6.22.0"
 
 "babel-preset-frontful@0.x || 1.x":
-  version "0.0.34"
-  resolved "https://registry.yarnpkg.com/babel-preset-frontful/-/babel-preset-frontful-0.0.34.tgz#8a5c44c2cee3c52768363aa606f25d06b3a33081"
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/babel-preset-frontful/-/babel-preset-frontful-0.0.35.tgz#694e9147ba052aca33cd1eebdecb36dfd933c7b1"
   dependencies:
     babel-plugin-add-module-exports "^0.2.1"
     babel-plugin-transform-class-properties "^6.24.1"
@@ -707,11 +707,11 @@ brace-expansion@^1.1.7:
     concat-map "0.0.1"
 
 browserslist@^2.1.2:
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.1.4.tgz#cc526af4a1312b7d2e05653e56d0c8ab70c0e053"
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-2.1.5.tgz#e882550df3d1cd6d481c1a3e0038f2baf13a4711"
   dependencies:
-    caniuse-lite "^1.0.30000670"
-    electron-to-chromium "^1.3.11"
+    caniuse-lite "^1.0.30000684"
+    electron-to-chromium "^1.3.14"
 
 builtin-modules@^1.0.0, builtin-modules@^1.1.1:
   version "1.1.1"
@@ -727,9 +727,9 @@ callsites@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-0.2.0.tgz#afab96262910a7f33c19a5775825c69f34e350ca"
 
-caniuse-lite@^1.0.30000670:
-  version "1.0.30000683"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000683.tgz#a7573707cf2acc9217ca6484d1dfbc9f13898364"
+caniuse-lite@^1.0.30000684:
+  version "1.0.30000690"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000690.tgz#3b232dbc0cf32bc2a888ec199852a50afa37f5ef"
 
 chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
   version "1.1.3"
@@ -794,6 +794,14 @@ core-js@^2.4.0:
 core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
+
+create-react-class@^15.6.0:
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.0.tgz#ab448497c26566e1e29413e883207d57cfe7bed4"
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
 
 d@1:
   version "1.0.0"
@@ -864,7 +872,7 @@ doctrine@^2.0.0:
     esutils "^2.0.2"
     isarray "^1.0.0"
 
-electron-to-chromium@^1.3.11:
+electron-to-chromium@^1.3.14:
   version "1.3.14"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.14.tgz#64af0f9efd3c3c6acd57d71f83b49ca7ee9c4b43"
 
@@ -971,8 +979,8 @@ escope@^3.6.0:
     estraverse "^4.1.1"
 
 "eslint-config-frontful@0.x || 1.x":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/eslint-config-frontful/-/eslint-config-frontful-0.0.19.tgz#dfd1e3c98553f46566741bd916937c2009c3539a"
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/eslint-config-frontful/-/eslint-config-frontful-0.0.20.tgz#ac4e146ab1723d08bf268f3ae2fab76987281a00"
   dependencies:
     babel-eslint "^7.2.1"
     eslint "3.x"
@@ -1025,12 +1033,12 @@ eslint-plugin-jsx-a11y@^5.0.1:
     jsx-ast-utils "^1.4.0"
 
 eslint-plugin-react@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.0.1.tgz#e78107e1e559c6e2b17786bb67c2e2a010ad0d2f"
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.1.0.tgz#27770acf39f5fd49cd0af4083ce58104eb390d4c"
   dependencies:
     doctrine "^2.0.0"
     has "^1.0.1"
-    jsx-ast-utils "^1.3.4"
+    jsx-ast-utils "^1.4.1"
 
 eslint@3.x:
   version "3.19.0"
@@ -1182,29 +1190,30 @@ foreach@^2.0.5:
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
 
 "frontful-common@0.x || 1.x":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/frontful-common/-/frontful-common-0.0.12.tgz#11afb0f5fd7aeb228778aad9b07e4a2713ad09b6"
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/frontful-common/-/frontful-common-0.0.13.tgz#d609523121db6e10511e4f916d679ee79e3fa628"
   dependencies:
     frontful-config "0.x || 1.x"
     object-path "^0.11.4"
 
 "frontful-config@0.x || 1.x":
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/frontful-config/-/frontful-config-0.0.16.tgz#9115caa85cf8351af30a43d7b2f3e4cb8c2f26af"
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/frontful-config/-/frontful-config-0.0.17.tgz#7090cca1ac94d1ce4943f89c2fb8bb881a69eac6"
   dependencies:
     deep-extend "^0.5.0"
     js-yaml "^3.8.3"
     object-path "^0.11.4"
 
 "frontful-model@0.x || 1.x":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/frontful-model/-/frontful-model-0.0.10.tgz#020a832262c06d03b32ebf8900849497b47fc53b"
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/frontful-model/-/frontful-model-0.0.11.tgz#0d14a28f68b368e885479e8c1a0966ad5842f936"
   dependencies:
     deep-extend "^0.5.0"
+    frontful-utils "0.x || 1.x"
 
 "frontful-utils@0.x || 1.x":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/frontful-utils/-/frontful-utils-0.0.5.tgz#86c5fecf24c5bdc5cc87db73aa151c425b7403a9"
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/frontful-utils/-/frontful-utils-0.0.6.tgz#0795fc5cea388b318bb2090b56b69c10a6e59604"
 
 fs-extra@^3.0.0:
   version "3.0.1"
@@ -1290,8 +1299,8 @@ hosted-git-info@^2.1.4:
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.4.2.tgz#0076b9f46a270506ddbaaea56496897460612a67"
 
 iconv-lite@~0.4.13:
-  version "0.4.17"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.17.tgz#4fdaa3b38acbc2c031b045d0edcdfe1ecab18c8d"
+  version "0.4.18"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.18.tgz#23d8656b16aae6742ac29732ea8f0336a4789cf2"
 
 ignore@^3.2.0:
   version "3.3.3"
@@ -1477,7 +1486,7 @@ jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/jsonpointer/-/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
 
-jsx-ast-utils@^1.3.4, jsx-ast-utils@^1.4.0:
+jsx-ast-utils@^1.4.0, jsx-ast-utils@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jsx-ast-utils/-/jsx-ast-utils-1.4.1.tgz#3867213e8dd79bf1e8f2300c0cfc1efb182c0df1"
 
@@ -1580,7 +1589,7 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-object-assign@^4.0.1, object-assign@^4.1.0:
+object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
@@ -1706,12 +1715,12 @@ progress@^1.1.8:
   resolved "https://registry.yarnpkg.com/progress/-/progress-1.1.8.tgz#e260c78f6161cdd9b0e56cc3e0a85de17c7a57be"
 
 promise@^7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/promise/-/promise-7.1.1.tgz#489654c692616b8aa55b0724fa809bb7db49c5bf"
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/promise/-/promise-7.3.0.tgz#e7feec5aa87a2cbb81acf47d9a3adbd9d4642d7b"
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.7, prop-types@~15.5.7:
+prop-types@^15.5.10:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -1719,22 +1728,23 @@ prop-types@^15.5.7, prop-types@~15.5.7:
     loose-envify "^1.3.1"
 
 react-dom@15.x:
-  version "15.5.4"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.5.4.tgz#ba0c28786fd52ed7e4f2135fe0288d462aef93da"
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.1.tgz#2cb0ed4191038e53c209eb3a79a23e2a4cf99470"
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
-    prop-types "~15.5.7"
+    prop-types "^15.5.10"
 
 react@15.x:
-  version "15.5.4"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.5.4.tgz#fa83eb01506ab237cdc1c8c3b1cea8de012bf047"
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
   dependencies:
+    create-react-class "^15.6.0"
     fbjs "^0.8.9"
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
-    prop-types "^15.5.7"
+    prop-types "^15.5.10"
 
 read-pkg-up@^2.0.0:
   version "2.0.0"
