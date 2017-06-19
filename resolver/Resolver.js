@@ -2,6 +2,7 @@ import React from 'react'
 import {Promisable as PromisableClass, deferred, getDisplayName, isBrowser} from 'frontful-utils'
 import {observer as mobxObserver} from 'mobx-react'
 import {untracked, observable, reaction} from 'mobx'
+import {Exceptions} from './Exceptions'
 
 let Promisable = Promise
 let observer = (Component) => (Component)
@@ -334,6 +335,10 @@ export class Resolver {
       result.__resolver_resolved__ = true
       return result
     }).catch((error) => {
+      if (error instanceof Exceptions.Cancel) {
+        throw error
+      }
+
       if (isBrowser()) {
         console.error(error)
       }
@@ -341,12 +346,14 @@ export class Resolver {
         const parseError = global.frontful && global.frontful.environment && global.frontful.environment.parseError
         console.log(parseError ? parseError(error).color : error)
       }
+
       class Error extends React.PureComponent {
         static displayName = `Error(${getDisplayName(this.Component)})`
         render() {
           return <pre style={errorStyle}>{error.toString()}</pre>
         }
       }
+
       return {
         error: error,
         component: Error,

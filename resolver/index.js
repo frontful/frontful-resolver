@@ -1,4 +1,5 @@
 import {Resolver} from './Resolver'
+import {Exceptions} from './Exceptions'
 
 function resolver(resolvable) {
   return resolver.bind(resolvable)
@@ -21,4 +22,5 @@ resolver.bind = function(resolvable) {
 export {
   Resolver,
   resolver,
+  Exceptions,
 }
