@@ -322,7 +322,7 @@ export class Resolver {
       const getRequisites = this.getRequisites.bind(this)
 
       const result = observer(
-        class Resolver extends React.PureComponent {
+        class Resolver extends React.Component {
           render() {
             const requisites = getRequisites()
             return (

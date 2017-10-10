@@ -1,6 +1,6 @@
 {
   "name": "frontful-resolver",
-  "version": "0.0.17",
+  "version": "2.0.1",
   "private": true,
   "description": "State management and binding approach for component based applications with focus on universality, isomorphism, data (pre)fetching and routing",
   "license": "MIT",
@@ -10,26 +10,28 @@
   },
   "main": "./resolver/index.js",
   "scripts": {
-    "build": "babel-preset-frontful build",
-    "deploy": "babel-preset-frontful deploy"
+    "build": "yarn test && babel-preset-frontful build",
+    "deploy": "yarn test && babel-preset-frontful deploy",
+    "test": "yarn test:eslint",
+    "test:eslint": "node ./node_modules/eslint/bin/eslint.js --max-warnings 0 ."
   },
   "dependencies": {
     "es6-error": "^4.0.2",
-    "frontful-utils": "0.x || 1.x",
+    "frontful-utils": "2.x",
     "mobx-react": "^4.1.8"
   },
   "peerDependencies": {
-    "frontful-model": "0.x || 1.x",
+    "frontful-model": "2.x",
     "mobx": "3.x",
-    "react": "15.x",
-    "react-dom": "15.x"
+    "react": "16.x",
+    "react-dom": "16.x"
   },
   "devDependencies": {
-    "babel-preset-frontful": "0.x || 1.x",
-    "eslint-config-frontful": "0.x || 1.x",
-    "frontful-model": "0.x || 1.x",
+    "babel-preset-frontful": "2.x",
+    "eslint-config-frontful": "2.x",
+    "frontful-model": "2.x",
     "mobx": "3.x",
-    "react": "15.x",
-    "react-dom": "15.x"
+    "react": "16.x",
+    "react-dom": "16.x"
   }
 }
