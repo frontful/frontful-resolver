@@ -326,7 +326,7 @@ export class Resolver {
           render() {
             const requisites = getRequisites()
             return (
-              requisites && Component && <Component resolved={requisites} {...this.props} {...requisites}/>
+              requisites && Component && <Component resolved={requisites} {...requisites} {...this.props}/>
             )
           }
         }
