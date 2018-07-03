@@ -1,6 +1,6 @@
 {
   "name": "frontful-resolver",
-  "version": "2.0.4",
+  "version": "3.0.2",
   "private": true,
   "description": "State management and binding approach for component based applications with focus on universality, isomorphism, data (pre)fetching and routing",
   "license": "MIT",
@@ -17,20 +17,20 @@
   },
   "dependencies": {
     "es6-error": "^4.0.2",
-    "frontful-utils": "2.x",
-    "mobx-react": "^4.1.8"
+    "frontful-utils": "3.x",
+    "mobx-react": "^5.2.3"
   },
   "peerDependencies": {
-    "frontful-model": "2.x",
-    "mobx": "3.x",
+    "frontful-model": "3.x",
+    "mobx": "4.x",
     "react": "16.x",
     "react-dom": "16.x"
   },
   "devDependencies": {
-    "babel-preset-frontful": "2.x",
-    "eslint-config-frontful": "2.x",
-    "frontful-model": "2.x",
-    "mobx": "3.x",
+    "babel-preset-frontful": "3.x",
+    "eslint-config-frontful": "3.x",
+    "frontful-model": "3.x",
+    "mobx": "4.x",
     "react": "16.x",
     "react-dom": "16.x"
   }

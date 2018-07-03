@@ -34,7 +34,9 @@ export class Resolver {
     this.resolvers = this.extractResolvers(this.Component)
     this.resolversTree = this.extractResolversTree(this.resolvers, this.props)
     this.data = observable({
-      requisites: observable.ref({})
+      requisites: {}
+    }, {
+      requisites: observable.ref
     })
   }
 
@@ -230,7 +232,9 @@ export class Resolver {
               boundProcess.promise.isProcessing = false
             }
             this.data = observable({
-              requisites: observable.ref({})
+              requisites: {}
+            }, {
+              requisites: observable.ref
             })
             if (execution.promise.isProcessing) {
               execution.reject(error)
@@ -244,7 +248,9 @@ export class Resolver {
           boundProcess.promise.isProcessing = true
         }
 
-        item.disposeReaction = reaction(resolveProps, reactToProps, true)
+        item.disposeReaction = reaction(resolveProps, reactToProps, {
+          fireImmediately: true
+        })
 
         return execution.promise
       })
@@ -285,7 +291,11 @@ export class Resolver {
         this.props = null
         this.resolvers = null
         this.resolversTree = null
-        this.data = observable({requisites: observable.ref({})})
+        this.data = observable({
+          requisites: {}
+        }, {
+          requisites: observable.ref
+        })
         this.data.requisites = null
         this.isDisposed = true
       }
