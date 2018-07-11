@@ -1,6 +1,6 @@
 {
   "name": "frontful-resolver",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": true,
   "description": "State management and binding approach for component based applications with focus on universality, isomorphism, data (pre)fetching and routing",
   "license": "MIT",

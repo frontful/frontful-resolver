@@ -114,7 +114,7 @@ export class Resolver {
               processedValue = resolver.execute()
             }
             else {
-              processedValue = value.type
+              processedValue = value
             }
           }
           else if (value && value.hasOwnProperty('__value__')) {
