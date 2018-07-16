@@ -1,6 +1,6 @@
 {
   "name": "frontful-resolver",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "private": true,
   "description": "State management and binding approach for component based applications with focus on universality, isomorphism, data (pre)fetching and routing",
   "license": "MIT",
@@ -14,6 +14,9 @@
     "deploy": "yarn test && babel-preset-frontful deploy",
     "test": "yarn test:eslint",
     "test:eslint": "node ./node_modules/eslint/bin/eslint.js --max-warnings 0 ."
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
     "es6-error": "^4.0.2",
