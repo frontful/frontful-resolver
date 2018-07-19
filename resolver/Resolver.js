@@ -346,7 +346,10 @@ export class Resolver {
       return result
     }).catch((error) => {
       if (error instanceof Exceptions.Cancel) {
-        throw error
+        if (!isBrowser()) {
+          throw error
+        }
+        return <React.Fragment />
       }
 
       if (isBrowser()) {
