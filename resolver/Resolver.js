@@ -179,7 +179,7 @@ export class Resolver {
         const resolveProps = () => {
           try {
             return item.resolver({
-              ...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context) : null,
+              ...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, item.props) : null,
               ...item.props,
               getRequisites: this.getRequisites,
             }) || {}
