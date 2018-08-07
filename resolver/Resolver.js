@@ -349,7 +349,7 @@ export class Resolver {
         if (!isBrowser()) {
           throw error
         }
-        return <React.Fragment />
+        return () => <React.Fragment />
       }
 
       if (isBrowser()) {
