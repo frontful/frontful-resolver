@@ -170,91 +170,109 @@ export class Resolver {
     throw new Error('frontful_resolver_cancel_execution')
   }
 
-  invokeReactivity(resolversTree) {
-    return Promise.all(
-      resolversTree.map((item) => {
-        const execution = deferred()
-        execution.promise.isProcessing = true
+  itemResolver = (item) => {
+    const execution = deferred()
+    execution.promise.isProcessing = true
 
-        const resolveProps = () => {
-          try {
-            return item.resolver({
-              ...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, item.props) : null,
-              ...item.props,
-              getRequisites: this.getRequisites,
-            }) || {}
-          }
-          catch(error) {
-            return Promise.reject(error)
-          }
-        }
+    const resolveProps = () => {
+      try {
+        return item.resolver({
+          ...this.definerObject,
+          //...this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, item.props) : null,
+          ...item.props,
+          getRequisites: this.getRequisites,
+        }) || {}
+      }
+      catch(error) {
+        return Promise.reject(error)
+      }
+    }
 
-        const reactToProps = (resolverResult) => {
-          const processing = item.process && item.process.promise && item.process.promise.isProcessing
-          if (processing) {
-            item.process.canceled = true
-          }
+    const reactToProps = (resolverResult) => {
+      const processing = item.process && item.process.promise && item.process.promise.isProcessing
+      if (processing) {
+        item.process.canceled = true
+      }
 
-          if (item.resolvers && item.resolvers.length) {
-            item.resolvers.forEach((resolver) => {
-              resolver.dispose(true)
-            })
-          }
-          this.disposeResolversTree([item.next])
-
-          item.process = {
-            promise: null,
-            canceled: false,
-          }
-
-          const boundProcess = item.process
-
-          item.process.promise = Promisable.resolve(resolverResult).then((resolverResult) => {
-            item.resolvers = []
-            return this.resolveReturnValues(resolverResult, item, boundProcess)
-          }).then(() => {
-            if (execution.promise.isProcessing) {
-              execution.resolve()
-              execution.promise.isProcessing = false
-            }
-            if (boundProcess.promise) {
-              boundProcess.promise.isProcessing = false
-            }
-            return null
-          }).catch((error) => {
-            if(error.message === 'frontful_resolver_cancel_execution') {
-              if (boundProcess.promise) {
-                boundProcess.promise.isProcessing = false
-              }
-              return
-            }
-            if (boundProcess.promise) {
-              boundProcess.promise.isProcessing = false
-            }
-            this.data = observable({
-              requisites: {}
-            }, {
-              requisites: observable.ref
-            })
-            if (execution.promise.isProcessing) {
-              execution.reject(error)
-              execution.promise.isProcessing = false
-            }
-            else {
-              throw error
-            }
-          })
-
-          boundProcess.promise.isProcessing = true
-        }
-
-        item.disposeReaction = reaction(resolveProps, reactToProps, {
-          fireImmediately: true
+      if (item.resolvers && item.resolvers.length) {
+        item.resolvers.forEach((resolver) => {
+          resolver.dispose(true)
         })
+      }
+      this.disposeResolversTree([item.next])
 
-        return execution.promise
+      item.process = {
+        promise: null,
+        canceled: false,
+      }
+
+      const boundProcess = item.process
+
+      item.process.promise = Promisable.resolve(resolverResult).then((resolverResult) => {
+        item.resolvers = []
+        return this.resolveReturnValues(resolverResult, item, boundProcess)
+      }).then(() => {
+        if (execution.promise.isProcessing) {
+          execution.resolve()
+          execution.promise.isProcessing = false
+        }
+        if (boundProcess.promise) {
+          boundProcess.promise.isProcessing = false
+        }
+        return null
+      }).catch((error) => {
+        if(error.message === 'frontful_resolver_cancel_execution') {
+          if (boundProcess.promise) {
+            boundProcess.promise.isProcessing = false
+          }
+          return
+        }
+        if (boundProcess.promise) {
+          boundProcess.promise.isProcessing = false
+        }
+        this.data = observable({
+          requisites: {}
+        }, {
+          requisites: observable.ref
+        })
+        if (execution.promise.isProcessing) {
+          execution.reject(error)
+          execution.promise.isProcessing = false
+        }
+        else {
+          throw error
+        }
       })
-    )
+
+      boundProcess.promise.isProcessing = true
+    }
+
+    item.disposeReaction = reaction(resolveProps, reactToProps, {
+      fireImmediately: true
+    })
+
+    return execution.promise
+  }
+
+  resolveObject(object) {
+    if (object) {
+      const keys = Object.keys(object)
+      return Promise.all(keys.map((key) => object[key])).then((results) => {
+        return keys.reduce((object, key, idx) => {
+          object[key] = results[idx]
+          return object
+        }, {})
+      })
+    }
+    return Promise.resolve(null)
+  }
+
+  invokeReactivity(resolversTree) {
+    const def = untracked(() => this.Component.__resolver_definer__ ? this.Component.__resolver_definer__(this.context, this.props) : null)
+    return this.resolveObject(def).then((definerObject) => {
+      this.definerObject = definerObject
+      return Promise.all(resolversTree.map(this.itemResolver))
+    })
   }
 
   setRequisites() {
